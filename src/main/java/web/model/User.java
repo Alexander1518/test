@@ -3,7 +3,8 @@ package web.model;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.*;
 import java.util.*;
 
@@ -29,6 +30,11 @@ public class User implements UserDetails {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "provider")
+    @Enumerated(EnumType.STRING)
+    private Provider provider;
+
+
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     @JoinTable(name = "users_roles",
@@ -40,12 +46,13 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String firstName, String lastName, Integer age, String email, String password, Set<Role> roles) {
+    public User(String firstName, String lastName, Integer age, String email, String password,Provider provider, Set<Role> roles) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
         this.email = email;
         this.password = password;
+        this.provider = provider;
         this.roles = roles;
     }
 
@@ -83,6 +90,14 @@ public class User implements UserDetails {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Provider getProvider() {
+        return provider;
+    }
+
+    public void setProvider(Provider provider) {
+        this.provider = provider;
     }
 
     public Set<Role> getRoles() {

@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import web.dao.UserRepo;
+import web.model.Provider;
 import web.model.User;
 
 import java.util.List;
@@ -53,5 +54,18 @@ public class UserServiceImpl implements UserService {
             throw new UsernameNotFoundException(String.format("User '%s' not found", email));
         }
         return user;
+    }
+    public void processOAuthPostLogin(String email) {
+        User existUser = userRepo.getUserByUsername(email);
+
+        if (existUser == null) {
+            User newUser = new User();
+            newUser.setEmail(email);
+            newUser.setProvider(Provider.GOOGLE);
+           // newUser.setEnabled(true);
+
+            userRepo.save(newUser);
+        }
+
     }
 }
